@@ -1,17 +1,17 @@
-from pykafka import KafkaClient
 from pykafka.simpleconsumer import OffsetType
-import logging
 
-logging.getLogger("pykafka.broker").setLevel('ERROR')
+from pykafka import KafkaClient
 
-client = KafkaClient(hosts="localhost:9092")
-topic = client.topics[b'service-calls']
-consumer = topic.get_balanced_consumer(
-    consumer_group=b'pytkafka-test-2',
-    auto_commit_enable=False,
-    auto_offset_reset=OffsetType.EARLIEST,
-    zookeeper_connect='remotehost:2181'
+client = KafkaClient(hosts="localhost:9092") #kafka consumer client
+
+topic = client.topics["service-calls"] #topic to read from
+
+consumer_messages = topic.get_balanced_consumer(
+    consumer_group = b'pytkafka-data',
+    zookeeper_connect = 'localhost:2181'
 )
-for message in consumer:
-    if message is not None:
-        print(message.offset, message.value)
+
+#Print out the messages
+for msg in consumer_messages:
+    if msg is not None:
+        print( msg.value.decode('utf-8'))
