@@ -3,7 +3,6 @@ import json
 import logging
 import pykafka
 import time
-from pykafka import KafkaClient
 
 INPUT_FILE = 'police-department-calls-for-service.json'
 
@@ -29,13 +28,15 @@ def dict_to_binary(json_dict: dict) -> bytes:
     """
     Encode your json to utf-8
     :param json_dict:
-    :return: byte stream
+    :return:
     """
-    return json.dumps(json_dict).encode('utf-8')
+    data = json.dumps(json_dict)
+    encoded_data = data.encode('utf-8')
+    return encoded_data
 
 # TODO set up kafka client
 if __name__ == "__main__":
-    client = KafkaClient(hosts="127.0.0.1:9092") 
+    client = pykafka.KafkaClient(hosts="localhost:9092")
     print("topics", client.topics)
     producer = client.topics[b'service-calls'].get_producer()
 
